@@ -16,6 +16,7 @@ function App() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  const [editingTitle, setEditingTitle] = useState('');
   const [editingTodo, setEditingTodo] = useState(null);
   const [todoList, setTodoList] = useState([]);
   const [todoTitle, setTodoTitle] = useState('');
@@ -96,51 +97,52 @@ function App() {
       <div className='d-flex w-100 align-items-center justify-content-center flex-column mt-5' style={{ width: '100%' }}>
         <button className='btn btn-outline-dark p-2' onClick={handleShow}><i className="fa-solid fa-plus me-2"></i>Add a Document</button>
         <div className='row mt-5'>
-          <div className='col-lg-9'>
-            <div className='d-flex p-5'>
+          <div className=''>
+            <div className='d-flex justify-content-center p-5'>
             {todoList.map((todo) => (
-  <Card style={{ width: '25rem', margin: '20px' }} key={todo.id}>
-    <Card.Body>
-      <div className="d-flex justify-content-between align-items-center">
-        {editingTodo === todo.id ? (
-          <div>
-            <input
-              type="text"
-              className='w-100'
-              value={todo.title}
-              onChange={(e) => updateTodo(todo.id, e.target.value)}
-            />
-            <Button variant='primary' onClick={() => setEditingTodo(null)}>
-              Save
-            </Button>
-          </div>
-        ) : (
-          <>
-            <Card.Title>{todo.title}</Card.Title>
-            <div>
-              <i
-                className="fa-regular fa-pen-to-square me-2"
-                onClick={() => setEditingTodo(todo.id)}
-              ></i>
-              <i
-                onClick={() => deleteTodo(todo.id)}
-                className="fa-solid fa-trash text-danger me-2"
-              ></i>
-            </div>
-          </>
-        )}
-      </div>
-      <Link
-        style={{ textDecoration: 'none', color: 'inherit' }}
-        to={`/quil/${todo.id}`}
-      >
-      <div style={{widows:'100%',minHeight:'30px'}} dangerouslySetInnerHTML={{ __html: todo.description }} />
-        {/* Additional description rendering (optional) */}
-        {/* <Card.Text>{todo.description}</Card.Text> */}
-      </Link>
-    </Card.Body>
-  </Card>
-))}
+              <Card style={{ width: '20rem', margin: '20px' }} key={todo.id}>
+                <Card.Body>
+                  <div className="d-flex justify-content-between align-items-center">
+                    {editingTodo === todo.id ? (
+                      <div>
+                        <input
+                          type="text"
+                          className='w-100'
+                          value={editingTitle || todo.title} // Use the editingTitle state when editing, otherwise use the original title
+                          onChange={(e) => setEditingTitle(e.target.value)}
+                        />
+                        <Button variant='primary' onClick={() => updateTodo(todo.id, editingTitle)}>
+                          Save
+                        </Button>
+                      </div>
+                    ) : (
+                      <>
+                        <Card.Title>{todo.title}</Card.Title>
+                        <div>
+                          <i
+                            className="fa-regular fa-pen-to-square me-2"
+                            onClick={() => {
+                              setEditingTitle(todo.title); // Set editingTitle to the current title when you start editing
+                              setEditingTodo(todo.id);
+                            }}
+                          ></i>
+                          <i
+                            onClick={() => deleteTodo(todo.id)}
+                            className="fa-solid fa-trash text-danger me-2"
+                          ></i>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                  <Link
+                    style={{ textDecoration: 'none', color: 'inherit' }}
+                    to={`/quil/${todo.id}`}
+                  >
+                    <div style={{ widows: '100%', minHeight: '30px' }} dangerouslySetInnerHTML={{ __html: todo.description }} />
+                  </Link>
+                </Card.Body>
+              </Card>
+            ))}
 
             </div>
           </div>
