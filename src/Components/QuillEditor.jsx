@@ -55,7 +55,7 @@ function QuillEditor() {
   }, [id, quill]);
 
   return (
-    <div style={{ width: '100%', maxWidth: 8000, margin: 'auto', height: '50vh' }}>
+    <div style={{ width: '100%', maxWidth: 8000, margin: 'auto', height: '100vh' }}>
       <div ref={quillRef} />
     </div>
   );
